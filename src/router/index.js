@@ -4,6 +4,8 @@ import Register from '../views/Register.vue'
 import Login from '../views/Login.vue'
 import Home from '../views/Home.vue'
 import Search from '../views/Search.vue'
+import Add from '../views/Add.vue'
+import Homepage from '../views/Homepage.vue'
 
 const routes = [
   {
@@ -25,9 +27,14 @@ const routes = [
         name: "/register",
         component: Register,
       },
-      
+      {
+        path: "/homepage",
+        name: "/homepage",
+        component: Homepage,
+      },
     ]
   },
+  {path:'/add',component:Add},
   // {path:'/login',component:Login},
   // {path:'/register',component:Register},
   // {path:'/search',component:Search},

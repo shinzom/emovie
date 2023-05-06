@@ -31,10 +31,11 @@
                         <input class="inp" id="password" v-model="pwd" type="password" placeholder="密码">
                     </div>
                     <div>
-                        <button class="login_btn" @click="login">登录</button>
+                        <button class="login_btn" @click="login">用户登录</button>
+                        <button  style="margin-top: 10px;" class="login_btn" @click="adminLogin">管理员登录</button>
                     </div>
                     <br>
-                    <div style="margin-top: 100px;display: flex;">
+                    <div style="margin-top: 53px;display: flex;">
                         <span style="font-size: 16px;margin-left: 50px;width: 80px;">没有账号？</span>
                         <button style="font-size: 16px;color: #4E655D;margin-left: 20px;width: 50px;" class="register_btn"
                             @click="register">注册</button>
@@ -71,6 +72,9 @@ export default {
         },
         home(){
             this.$router.push('/');
+        },
+        adminLogin(){
+            this.$router.push('/add');
         },
     }
 }
