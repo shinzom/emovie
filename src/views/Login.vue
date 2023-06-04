@@ -15,24 +15,25 @@
                                     533.333333 256S426.666667 302.933333 426.666667 362.666667s46.933333 106.666667 106.666666 106.666666S640 422.4 640 
                                     362.666667z" fill="#444444"></path>
                         </svg>
-                        <input class="inp" id="user" v-model="name" placeholder="用户名">
+                        <input class="inp" id="user" v-model="user.username" placeholder="用户名">
                     </div>
                     <br>
                     <div class="pwdbox">
                         <svg t="1680522311002" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
                             width="25px" height="25px">
-                            <path d="M418.133333 499.2c-21.333333-34.133333-29.866667-72.533333-29.866666-115.2 0-119.466667 93.866667-213.333333 
+                            <path
+                                d="M418.133333 499.2c-21.333333-34.133333-29.866667-72.533333-29.866666-115.2 0-119.466667 93.866667-213.333333 
                                     213.333333-213.333333s213.333333 93.866667 213.333333 213.333333-93.866667 213.333333-213.333333 213.333333c-46.933333 
                                     0-85.333333-12.8-123.733333-38.4l-98.133334 98.133334 46.933334 46.933333-59.733334 59.733333-46.933333-46.933333-29.866667 
                                     29.866667 46.933334 46.933333L277.333333 853.333333 170.666667 746.666667l247.466666-247.466667zM601.6 256c-72.533333 0-128 
                                     55.466667-128 128s55.466667 128 128 128 128-55.466667 128-128-59.733333-128-128-128z"
                                 fill="#444444"></path>
                         </svg>
-                        <input class="inp" id="password" v-model="pwd" type="password" placeholder="密码">
+                        <input class="inp" id="password" v-model="user.password" type="password" placeholder="密码">
                     </div>
                     <div>
                         <button class="login_btn" @click="login">用户登录</button>
-                        <button  style="margin-top: 10px;" class="login_btn" @click="adminLogin">管理员登录</button>
+                        <button style="margin-top: 10px;" class="login_btn" @click="adminLogin">管理员登录</button>
                     </div>
                     <br>
                     <div style="margin-top: 53px;display: flex;">
@@ -54,27 +55,91 @@
 </template>
 
 <script >
-
+import { login_user } from '../utils/api'
+import { login_admin } from '../utils/api'
 export default {
     data() {
         return {
-            name: "",
-            pwd: "",
-            repwd: "",
+            user: {
+                username: "",
+                password: "",
+            },
+            user_admin: {
+                name: "",
+                password: "",
+            }
         }
     },
     methods: {
         register() {
             this.$router.push('/register');
         },
-        login(){
+        login() {
+            if (this.user.username == "" || this.user.password == "") {
+                this.$message({
+                    showClose: true,
+                    message: "用户名或密码为空",
+                    type: 'error'
+                })
+            } else {
+                login_user(this.user).then(res => {
+                    if (res.code == 1) {
+                        this.$router.push('/');
+                        //弹出成功消息
+                        this.$message({
+                            showClose: true,
+                            message: '用户登录成功',
+                            type: 'success'
+                        })
+                    } else if (res.code == 0){
+                        this.$message({
+                            showClose: true,
+                            message: "用户名或密码错误",
+                            type: 'error'
+                        })
+                    }
+                }).catch(err => {
+                    console.log(err.response)
+                })
+            }
 
         },
-        home(){
+        home() {
             this.$router.push('/');
         },
-        adminLogin(){
-            this.$router.push('/add');
+        adminLogin() {
+            if (this.user.username == "" || this.user.password == "") {
+                this.$message({
+                    showClose: true,
+                    message: "用户名或密码为空",
+                    type: 'error'
+                })
+            } else {
+                this.user_admin.name = this.user.username;
+                this.user_admin.password = this.user.password;
+                login_admin(this.user_admin).then(res => {
+                    console.log(res)
+                    if (res.code == 1) {
+                        this.$router.push('/add');
+                        //弹出成功消息
+                        this.$message({
+                            showClose: true,
+                            message: '管理员登录成功',
+                            type: 'success'
+                        })
+
+                    } else if (res.code == 0){
+                        this.$message({
+                            showClose: true,
+                            message: "管理员名称或密码错误",
+                            type: 'error'
+                        })
+                    }
+                }).catch(err => {
+                    console.log(err.response)
+                })
+            }
+
         },
     }
 }
@@ -83,9 +148,9 @@ export default {
 </script>
 
 <style>
-.main{
+.main {
     width: 100%;
-    height:670px;
+    height: 670px;
     background-image: url('../img/background4.png');
     background-size: cover;
 }
@@ -98,7 +163,7 @@ export default {
     top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
-    box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 #4E655D; 
+    box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 #4E655D;
     box-shadow: 0 5px 16px 5px rgb(0, 0, 0);
 }
 

@@ -15,33 +15,35 @@
                                     533.333333 256S426.666667 302.933333 426.666667 362.666667s46.933333 106.666667 106.666666 106.666666S640 422.4 640 
                                     362.666667z" fill="#444444"></path>
                         </svg>
-                        <input class="inp" id="user" v-model="name" placeholder="用户名">
+                        <input class="inp" id="user" v-model="registerData.username" placeholder="用户名">
                     </div>
                     <br>
                     <div class="register_box">
                         <svg t="1680522311002" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
                             width="25px" height="25px">
-                            <path d="M418.133333 499.2c-21.333333-34.133333-29.866667-72.533333-29.866666-115.2 0-119.466667 93.866667-213.333333 
+                            <path
+                                d="M418.133333 499.2c-21.333333-34.133333-29.866667-72.533333-29.866666-115.2 0-119.466667 93.866667-213.333333 
                                     213.333333-213.333333s213.333333 93.866667 213.333333 213.333333-93.866667 213.333333-213.333333 213.333333c-46.933333 
                                     0-85.333333-12.8-123.733333-38.4l-98.133334 98.133334 46.933334 46.933333-59.733334 59.733333-46.933333-46.933333-29.866667 
                                     29.866667 46.933334 46.933333L277.333333 853.333333 170.666667 746.666667l247.466666-247.466667zM601.6 256c-72.533333 0-128 
                                     55.466667-128 128s55.466667 128 128 128 128-55.466667 128-128-59.733333-128-128-128z"
                                 fill="#444444"></path>
                         </svg>
-                        <input class="inp" id="password" v-model="pwd" type="password" placeholder="密码">
+                        <input class="inp" id="password" v-model="registerData.password" type="password" placeholder="密码">
                     </div>
                     <br>
                     <div class="register_box">
                         <svg t="1680522311002" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
                             width="25px" height="25px">
-                            <path d="M418.133333 499.2c-21.333333-34.133333-29.866667-72.533333-29.866666-115.2 0-119.466667 93.866667-213.333333 
+                            <path
+                                d="M418.133333 499.2c-21.333333-34.133333-29.866667-72.533333-29.866666-115.2 0-119.466667 93.866667-213.333333 
                                     213.333333-213.333333s213.333333 93.866667 213.333333 213.333333-93.866667 213.333333-213.333333 213.333333c-46.933333 
                                     0-85.333333-12.8-123.733333-38.4l-98.133334 98.133334 46.933334 46.933333-59.733334 59.733333-46.933333-46.933333-29.866667 
                                     29.866667 46.933334 46.933333L277.333333 853.333333 170.666667 746.666667l247.466666-247.466667zM601.6 256c-72.533333 0-128 
                                     55.466667-128 128s55.466667 128 128 128 128-55.466667 128-128-59.733333-128-128-128z"
                                 fill="#444444"></path>
                         </svg>
-                        <input class="inp" id="re_password" v-model="repwd" type="password" placeholder="确认密码">
+                        <input class="inp" id="re_password" v-model="registerData.repwd" type="password" placeholder="确认密码">
                     </div>
                     <br>
                     <div class="register_box">
@@ -54,7 +56,7 @@
                                     533.333333 256S426.666667 302.933333 426.666667 362.666667s46.933333 106.666667 106.666666 106.666666S640 422.4 640 
                                     362.666667z" fill="#444444"></path>
                         </svg>
-                        <input class="inp" id="phone" v-model="phone" placeholder="手机号">
+                        <input class="inp" id="phone" v-model="registerData.phone" placeholder="手机号">
                     </div>
                     <br>
                     <div class="register_box">
@@ -67,10 +69,20 @@
                                     533.333333 256S426.666667 302.933333 426.666667 362.666667s46.933333 106.666667 106.666666 106.666666S640 422.4 640 
                                     362.666667z" fill="#444444"></path>
                         </svg>
-                        <input class="inp" id="phone" v-model="phone" placeholder="邮箱">
+                        <input class="inp" id="email" v-model="registerData.email" placeholder="邮箱">
+                    </div>
+                    <br>
+                    <div style="margin-top: -5px;height: 15px;margin-bottom: 15px;">
+                        <span
+                            style="margin-left:30px;font-family: sans-serif;font-size: 15px;color: #445b53;font-weight: bold;">性别：</span>
+                        <el-radio-group v-model="gender_choose" style="height: 15px;margin-left: 10px;" text-color="green">
+                            <el-radio :label=1>女</el-radio>
+                            <el-radio :label=2>男</el-radio>
+                        </el-radio-group>
                     </div>
 
                     <br>
+
                     <button class="login_btn" @click="register">注册</button>
 
                     <div style="margin-top: 10px;display: flex;">
@@ -91,19 +103,81 @@
 </template>
 
 <script >
-
+import { register_user } from '../utils/api'
 export default {
     data() {
         return {
-            name: "",
-            pwd: "",
-            repwd: "",
-            phone: "",
+            gender_choose: 1,
+            registerData: {
+                username: "",
+                password: "",
+                gender: "",
+                repwd: "",
+                phone: "",
+                email: "",
+            }
         }
     },
     methods: {
         register() {
+            if (this.gender_choose == 1) {
+                this.registerData.gender = "女";
+            } else if (this.gender_choose == 2) {
+                this.registerData.gender = "男";
+            }
 
+            if (this.registerData.username == "") {
+                this.$message({
+                    showClose: true,
+                    message: "用户名为空",
+                    type: 'error'
+                })
+            } else if (this.registerData.password == "" || this.registerData.repwd == "") {
+                this.$message({
+                    showClose: true,
+                    message: "密码或确认密码为空",
+                    type: 'error'
+                })
+            } else if (this.registerData.phone == "") {
+                this.$message({
+                    showClose: true,
+                    message: "手机号为空",
+                    type: 'error'
+                })
+            } else if (this.registerData.email == "") {
+                this.$message({
+                    showClose: true,
+                    message: "邮箱为空",
+                    type: 'error'
+                })
+            } else if (this.registerData.password != this.registerData.repwd) {
+                this.$message({
+                    showClose: true,
+                    message: "输入的两次密码不一致",
+                    type: 'error'
+                })
+            } else {
+                register_user(this.registerData).then(res => {
+                    console.log(res);
+                    if (res.code == 1) {
+                        this.$router.push('/');
+                        //弹出成功消息
+                        this.$message({
+                            showClose: true,
+                            message: '用户注册成功',
+                            type: 'success'
+                        })
+                    } else {
+                        this.$message({
+                            showClose: true,
+                            message: "错误",
+                            type: 'error'
+                        })
+                    }
+                }).catch(err => {
+                    console.log(err.response)
+                })
+            }
         },
         login() {
             this.$router.push('/login');
@@ -143,15 +217,15 @@ export default {
 }
 
 .register_userbox {
-    margin-top: 50px;
-    height: 30px;
+    margin-top: 30px;
+    height: 25px;
     width: 230px;
     display: flex;
     margin-left: 25px;
 }
 
 .register_box {
-    height: 30px;
+    height: 25px;
     width: 225px;
     display: flex;
     margin-left: 25px;

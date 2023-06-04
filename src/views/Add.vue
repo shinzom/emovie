@@ -1,76 +1,126 @@
 <template>
-    <el-container style="width:100%;height: 720px;" class="add">
+    <el-container style="width:100%;height: 850px;" class="add">
         <el-header>
             <div class="admintitle">
                 <span>管理员▶添加电影和类目</span>
             </div>
         </el-header>
         <el-container style="height: 100%;width: 100%;" class="mytab">
-            <el-tabs tab-position="left" style="height: 650px;width: 100%;" class="demo-tabs">
+            <el-tabs tab-position="left" style="height: 780px;width: 100%;" class="demo-tabs">
                 <el-tab-pane label="添加电影">
                     <div class="movie_div">
-                        <div style="margin-top: 10px;margin-left:100px;width:500px;height:500px;float: left;">
+                        <div style="margin-top: 10px;margin-left:100px;width:500px;height:680px;float: left;">
                             <el-form-item label="电影名称：" class="label">
-                                <el-input v-model="movieData.name" style="width:300px" placeholder="请输入电影名称" />
+                                <el-input v-model="movieData.movie.title" style="width:300px" placeholder="请输入电影名称" />
                             </el-form-item>
                             <el-form-item label="原名：" class="label" style="margin-left: 32px;">
-                                <el-input v-model="movieData.original_title" style="width:300px" placeholder="请输入电影原名" />
+                                <el-input v-model="movieData.movie.originalTitle" style="width:300px"
+                                    placeholder="请输入电影原名" />
                             </el-form-item>
-                            <el-form-item label="国家：" class="label" style="margin-left: 32px;">
-                                <el-input v-model="movieData.country" style="width:300px" placeholder="请输入电影国家" />
-                            </el-form-item>
-                            <el-form-item label="语言：" class="label" style="margin-left: 32px;">
-                                <el-radio-group v-model="movieData.language">
-                                    <el-radio :label="1">中文</el-radio>
-                                    <el-radio :label="2">英文</el-radio>
-                                    <el-radio :label="3">韩文</el-radio>
-                                    <el-radio :label="4">日文</el-radio>
+                            <el-form-item label="状态：" class="label" style="margin-left: 32px;">
+                                <el-radio-group v-model="movieData.movie.status">
+                                    <el-radio label="Released" size="large">已发行</el-radio>
+                                    <el-radio label="NotReleased" size="large">未发行</el-radio>
                                 </el-radio-group>
                             </el-form-item>
+                            <el-form-item label="国家：" class="label" style="margin-left: 32px;">
+                                <!-- <el-select v-model="movieData.countryIdList" multiple filterable remote
+                                    reserve-keywordreserve-keyword placeholder="请输入电影国家"
+                                    :remote-method="transshipmentdepotremoteMethod" :focus="transshipmentdepotremoteMethod"
+                                    :loading="loading" style="width:300px">
+                                    <el-option v-for="item in countryOptions" :key="item.countryId"
+                                        :label="item.countryName" :value="item.countryId" :popper-append-to-body="false">
+                                    </el-option>
+                                </el-select> -->
+                                <el-autocomplete v-model="inputValue" :fetch-suggestions="querySearchAsync"
+                                    :popper-class="'my-autocomplete-popper'" placeholder="请输入国家名" @select="handleSelect"
+                                    style="width: 300px; height: auto;">
+                                    <!-- <template slot-scope="{ item }">
+                                        <div>{{ item.value }}</div>
+                                    </template> -->
+                                </el-autocomplete>
+                                <el-tag v-for="(countriesName, index) in selected" :key="index" closable
+                                    @close="handleTagClose(countriesName)">{{ countriesName }}</el-tag>
+                            </el-form-item>
+
+                            <el-form-item label="语言：" class="label" style="margin-left: 32px;">
+                                <el-autocomplete v-model="inputLanguage" :fetch-suggestions="querySearchAsyncLanguage"
+                                    :popper-class="'my-autocomplete-popper'" placeholder="请输入语言"
+                                    @select="handleSelectLanguage" style="width: 300px; height: auto;">
+                                </el-autocomplete>
+                                <el-tag v-for="(languagesName, index) in selectedLanguage" :key="index" closable
+                                    @close="handleTagCloseLanguage(languagesName)">{{ languagesName }}</el-tag>
+                            </el-form-item>
+                            <el-form-item label="官网主页：" class="label">
+                                <el-input v-model="movieData.movie.homepage" style="width:300px" placeholder="请输入电影官网主页" />
+                            </el-form-item>
                             <el-form-item label="导语：" class="label" style="margin-left: 32px;">
-                                <el-input v-model="movieData.tagline" style="width:300px" placeholder="请输入电影导语" />
+                                <el-input v-model="movieData.movie.tagline" style="width:300px" placeholder="请输入电影导语" />
                             </el-form-item>
                             <el-form-item label="电影概述：" class="label">
-                                <el-input v-model="movieData.overview" style="width:300px;" type="textarea" clearable
+                                <el-input v-model="movieData.movie.overview" style="width:300px;" type="textarea" clearable
                                     :autosize="{ minRows: 10, maxRows: 20 }" maxlength="1000" placeholder="请输入电影概述" />
                             </el-form-item>
                         </div>
-                        <div style="margin-top: 10px;width:500px;height:500px;float: left;">
-                            <el-form-item label="时长：" class="label" style="margin-left: 32px;">
-                                <el-time-picker v-model="movieData.runtime" :picker-options="{
-                                    selectableRange: '00:00:00 - 6:30:00'
-                                }" placeholder="请选择电影时长" />
+                        
+                        <div style="margin-top: 10px;width:500px;height:680px;float: left;">
+                            <el-form-item label="导演：" class="label" style="margin-left: 32px;">
+                                <el-autocomplete v-model="inputDirector" :fetch-suggestions="querySearchAsyncDirector"
+                                    :popper-class="'my-autocomplete-popper'" placeholder="请输入要搜索的导演" @select="handleSelectDirector"
+                                    style="width: 300px; height: auto;">
+                                </el-autocomplete>
+                                <el-tag v-for="(directorsName, index) in selectedDirector" :key="index" closable
+                                    @close="handleTagCloseDirector(directorsName)">{{ directorsName }}</el-tag>
                             </el-form-item>
-                            <el-form-item label="状态：" class="label" style="margin-left: 32px;">
-                                <el-input v-model="movieData.budget" style="width:300px" placeholder="请输入电影预算" />
+                            <el-form-item label="导演：" class="label" style="margin-left: 32px;">
+                                <el-input v-model="inputDirectorName" style="width:300px" placeholder="请输入要添加的导演"
+                                    @keyup.enter="directorName" />
+                                <el-tag v-for="(directorsName, index) in selectedDirectorName" :key="index" closable
+                                    @close="handleTagCloseDirectorName(directorsName)">{{ directorsName }}</el-tag>
+                            </el-form-item>
+                            <el-form-item label="演员：" class="label" style="margin-left: 32px;">
+                                <el-autocomplete v-model="inputActor" :fetch-suggestions="querySearchAsyncActor"
+                                    :popper-class="'my-autocomplete-popper'" placeholder="请输入要搜索的演员" @select="handleSelectActor"
+                                    style="width: 300px; height: auto;">
+                                </el-autocomplete>
+                                <el-tag v-for="(actorsName, index) in selectedActor" :key="index" closable
+                                    @close="handleTagCloseActor(actorsName)">{{ actorsName }}</el-tag>
+                            </el-form-item>
+                            <el-form-item label="演员：" class="label" style="margin-left: 32px;">
+                                <el-input v-model="inputActorName" style="width:300px" placeholder="请输入要添加的演员"
+                                    @keyup.enter="actorName" />
+                                <el-tag v-for="(actorsName, index) in selectedActorName" :key="index" closable
+                                    @close="handleTagCloseActorName(actorsName)">{{ actorsName }}</el-tag>
+                            </el-form-item>
+                            <el-form-item label="时长：" class="label" style="margin-left: 32px;">
+                                <el-time-picker v-model="movieData.movie.runtime" format="hh:mm:ss" value-format="hh:mm:ss"
+                                    placeholder="请选择电影时长" style="width: 300px; height: auto;" />
                             </el-form-item>
                             <el-form-item label="发行时间：" class="label">
-                                <el-date-picker v-model="movieData.releaseDate" type="date" placeholder="请选择电影发行时间"
-                                    style="width:300px" />
-                            </el-form-item>
-                            <el-form-item label="官网主页：" class="label">
-                                <el-input v-model="movieData.homepage" style="width:300px" placeholder="请输入电影官网主页" />
+                                <el-date-picker v-model="movieData.movie.releaseDate" type="date" format="YYYY-MM-DD"
+                                    value-format="YYYY-MM-DD" placeholder="请选择电影发行时间" style="width:300px" />
                             </el-form-item>
                             <el-form-item label="热度：" class="label" style="margin-left: 32px;">
-                                <el-input v-model="movieData.popularity" style="width:300px" placeholder="请输入电影热度" />
+                                <el-input v-model="movieData.movie.popularity" style="width:300px" placeholder="请输入电影热度" />
                             </el-form-item>
                             <el-form-item label="收入：" class="label" style="margin-left: 32px;">
-                                <el-input v-model="movieData.revenue" style="width:300px" placeholder="请输入电影收入" />
+                                <el-input v-model="movieData.movie.revenue" style="width:300px" placeholder="请输入电影收入" />
                             </el-form-item>
                             <el-form-item label="仅限成人：" class="label">
-                                <el-radio-group v-model="movieData.adult">
-                                    <el-radio :label="1">是</el-radio>
-                                    <el-radio :label="2">否</el-radio>
+                                <el-radio-group v-model="movieData.movie.adult">
+                                    <el-radio :label="true">是</el-radio>
+                                    <el-radio :label="false">否</el-radio>
                                 </el-radio-group>
                             </el-form-item>
                             <el-form-item label="预算：" class="label" style="margin-left: 32px;">
-                                <el-input v-model="movieData.budget" style="width:300px" placeholder="请输入电影预算" />
+                                <el-input v-model="movieData.movie.budget" style="width:300px" placeholder="请输入电影预算" />
                             </el-form-item>
                             <el-form-item label="平均评分：" class="label">
-                                <el-input v-model="movieData.voteAverage" style="width:300px" placeholder="请输入电影平均评分" />
+                                <el-input v-model="movieData.movie.voteAverage" style="width:300px"
+                                    placeholder="请输入电影平均评分" />
                             </el-form-item>
                             <el-form-item label="评分人数：" class="label">
-                                <el-input v-model="movieData.voteCount" style="width:300px" placeholder="请输入电影评分人数" />
+                                <el-input v-model="movieData.movie.voteCount" style="width:300px" placeholder="请输入电影评分人数" />
                             </el-form-item>
                         </div>
 
@@ -84,7 +134,7 @@
                         <div class="mycard">
                             <el-form-item label="类目：" class="label"
                                 style="width:500px;height:30px;float: left;margin-left: 40px;margin-top: 10px;">
-                                <el-input v-model="genres" style="width:300px" placeholder="请输入电影类目" />
+                                <el-input v-model="genre.genreName" style="width:300px" placeholder="请输入电影类目" />
                             </el-form-item>
                             <button class="genres_btn" @click="addGenres">添加类目</button>
                         </div>
@@ -95,10 +145,23 @@
                         <div class="mycard">
                             <div style="height:10px;"></div>
                             <el-form-item label="输入电影名：" class="label" style="margin-left: 40px;">
-                                <el-input v-model="findMovie" style="width:300px" />
+                                <el-select v-model="movieaddgenreData.movieId" filterable remote
+                                    reserve-keywordreserve-keyword placeholder="请输入电影名"
+                                    :remote-method="transshipmentdepotremoteMethod" :focus="transshipmentdepotremoteMethod"
+                                    :loading="loading" style="width:300px">
+                                    <el-option v-for="item in movieOptions" :key="item.movieId" :label="item.title"
+                                        :value="item.movieId" :popper-append-to-body="false">
+                                    </el-option>
+                                </el-select>
                             </el-form-item>
                             <el-form-item label="输入类目名：" class="label" style="margin-left: 40px;">
-                                <el-input v-model="findGenres" style="width:300px" />
+                                <el-select v-model="movieaddgenreData.genreId" filterable remote
+                                    reserve-keywordreserve-keyword placeholder="请输入类目名" :remote-method="genreMethod"
+                                    :focus="genreMethod" :loading="loadinggenre" style="width:300px">
+                                    <el-option v-for="item in genreOptions" :key="item.genreId" :label="item.genreName"
+                                        :value="item.genreId" :popper-append-to-body="false">
+                                    </el-option>
+                                </el-select>
                             </el-form-item>
                             <button class="genres_btn" @click="addMovieGenres">添加</button>
                         </div>
@@ -110,42 +173,480 @@
 </template>
 
 <script>
+import axios from 'axios';
+import { movieadd } from '../utils/api'
+import { genreadd } from '../utils/api'
+import { getmovie } from '../utils/api'
+import { getgenre } from '../utils/api'
+import { movieaddgenre } from '../utils/api'
+import { number } from 'echarts';
 export default {
     data() {
         return {
-            languageOptions: [
-                { label: "中文", key: 1 },
-                { label: "英文", key: 2 },
-                { label: "韩文", key: 3 },
-                { label: "日文", key: 4 },
-            ],
+            //模糊查询国家
+            inputValue: '',
+            suggestions: [],
+            selected: [],
+
+            //模糊查询语言
+            inputLanguage: '',
+            suggestionsLanguage: [],
+            selectedLanguage: [],
+
+            //模糊查询演员
+            inputActor: '',
+            suggestionsActor: [],
+            selectedActor: [],
+            inputActorName: '',
+            selectedActorName: [],
+
+            //模糊查询导演
+            inputDirector: '',
+            suggestionsDirector: [],
+            selectedDirector: [],
+            inputDirectorName: '',
+            selectedDirectorName: [],
+
+            //添加电影时的数据
             movieData: {
-                name: "",
-                original_title: "",
-                language: 1,
-                overview: "",
-                popularity: 0,
-                releaseDate: "",
-                revenue: 0,
-                runtime: 0,
-                adult: 0,
-                budget: 0,
-                homepage: "",
-                tagline: "",
-                voteAverage: 0,
-                voteCount: 0,
-                country: "",
+                movie: {
+                    title: "",
+                    originalTitle: "",
+                    originalLanguage: "",
+                    tagline: "",
+                    overview: "",
+                    runtime: "",
+                    status: "",
+                    releaseDate: "",
+                    homepage: "",
+                    popularity: "",
+                    revenue: "",
+                    adult: "",
+                    budget: "",
+                    voteAverage: "",
+                    voteCount: "",
+                },
+                countryIdList: [],
+                languageIdList: [],
+                castIdList: [],
+                newCastNameList: [],
+                directorIdList: [],
+                newDirectorNameList: [],
             },
-            genres: "",//类目
-            findMovie: "",
-            findGenres: "",
+
+            //添加类目时的数据
+            genre: {
+                genreName: "",//类目
+            },
+
+            //模糊查询电影
+            movieOptions: [],
+            movieAll: [],
+            loading: false,
+
+            //模糊查询类目
+            genreOptions: [],
+            genreAll: [],
+            loadinggenre: false,
+
+            movieaddgenreData: {
+                movieId: null,
+                genreId: null,
+            },
         }
     },
+    created() {
+        const movieKey = "";
+        getmovie(movieKey, 10).then(res => {
+            if (res.code == 1) {
+                console.log(res);
+                this.movieOptions = res.data;
+                this.movieAll = res.data;
+            } else if (res.code == 0) {
+                this.movieOptions = [];
+            }
+        }).catch(err => {
+            console.log(err.response)
+        })
+
+        const genreKey = "";
+        getgenre(genreKey, 10).then(res => {
+            if (res.code == 1) {
+                console.log(res);
+                this.genreOptions = res.data;
+                this.genreAll = res.data;
+            } else if (res.code == 0) {
+                this.genreOptions = [];
+            }
+        }).catch(err => {
+            console.log(err.response)
+        })
+    },
     methods: {
-        addMovie() { },
-        addGenres() { },
-        addMovieGenres() { },
-    }
+        //模糊查询国家
+        querySearchAsync(queryString, callback) {
+            axios.get(`http://43.143.247.127:8088/country?countryKey=${queryString}&limit=15`)
+                .then(response => {
+                    const countries = response.data.data;
+                    const suggestionNames = [];
+                    // 读取数据，获取每个国家的countryName
+                    for (let i = 0; i < countries.length; i++) {
+                        suggestionNames.push({
+                            label: countries[i].countryId,
+                            value: countries[i].countryName,
+                        });
+                    }
+                    this.suggestions = suggestionNames;
+                    // console.log(suggestionNames)
+                    callback(this.suggestions);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+        handleSelect(item) {
+            this.inputValue = '';
+            // 不能重复添加
+            if (!this.selected.includes(item.value)) {
+                this.selected.push(item.value);
+                // 添加id到countryIdList中
+                this.movieData.countryIdList.push(item.label);
+                console.log(this.movieData.countryIdList)
+            }
+        },
+        handleTagClose(countryName) {
+            const index = this.selected.indexOf(countryName);
+            if (index !== -1) {
+                this.selected.splice(index, 1);
+            }
+        },
+
+        //模糊查询语言
+        querySearchAsyncLanguage(queryString, callback) {
+            axios.get(`http://43.143.247.127:8088/language?languageKey=${queryString}&limit=15`)
+                .then(response => {
+                    const languages = response.data.data;
+                    const suggestionNames = [];
+                    console.log(languages)
+                    // 读取数据，获取每个国家的languageName
+                    for (let i = 0; i < languages.length; i++) {
+                        suggestionNames.push({
+                            label: languages[i].languageId,
+                            value: languages[i].languageName,
+                        });
+                    }
+                    this.suggestionsLanguage = suggestionNames;
+                    callback(this.suggestionsLanguage);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+        handleSelectLanguage(item) {
+            this.inputLanguage = '';
+            // 不能重复添加
+            if (!this.selectedLanguage.includes(item.value)) {
+                this.selectedLanguage.push(item.value);
+                // 添加id到languageIdList中
+                this.movieData.languageIdList.push(item.label);
+                console.log(this.movieData.languageIdList)
+            }
+        },
+        handleTagCloseLanguage(languagesName) {
+            const index = this.selectedLanguage.indexOf(languagesName);
+            if (index !== -1) {
+                this.selectedLanguage.splice(index, 1);
+            }
+            // console.log(this.selectedLanguage)
+            // this.movieData.languageIdList = [];
+            // for(let i = 0;i<this.selectedLanguage.length;i++){
+            //     this.movieData.languageIdList.push(this.selectedLanguage[i]);
+            // }
+        },
+
+        //模糊查询导演
+        querySearchAsyncDirector(queryString, callback) {
+            axios.get(`http://43.143.247.127:8088/person?personKey=${queryString}&limit=15`)
+                .then(response => {
+                    const directors = response.data.data;
+                    const suggestionNames = [];
+                    console.log(directors)
+                    // 读取数据，获取每个导演的directorName
+                    for (let i = 0; i < directors.length; i++) {
+                        suggestionNames.push({
+                            label: directors[i].personId,
+                            value: directors[i].castName,
+                        });
+                    }
+                    this.suggestionsDirector = suggestionNames;
+                    callback(this.suggestionsDirector);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
+        handleSelectDirector(item) {
+            this.inputDirector = '';
+            // 不能重复添加
+            if (!this.selectedDirector.includes(item.value)) {
+                this.selectedDirector.push(item.value);
+                // 添加id到castIdList中
+                this.movieData.directorIdList.push(item.label);
+                console.log(this.movieData.directorIdList)
+            }
+        },
+        handleTagCloseDirector(directorsName) {
+            const index = this.selectedDirector.indexOf(directorsName);
+            if (index !== -1) {
+                this.selectedDirector.splice(index, 1);
+            }
+        },
+        directorName() {
+            if (this.inputDirectorName != "") {
+                this.movieData.newDirectorNameList.push(this.inputDirectorName);
+                this.selectedDirectorName.push(this.inputDirectorName);
+                this.inputDirectorName = "";
+            }
+        },
+        handleTagCloseDirectorName(directorsName) {
+            const index = this.selectedDirectorName.indexOf(directorsName);
+            if (index !== -1) {
+                this.selectedDirectorName.splice(index, 1);
+            }
+        },
+
+        //模糊查询演员
+        querySearchAsyncActor(queryString, callback) {
+            axios.get(`http://43.143.247.127:8088/person?personKey=${queryString}&limit=15`)
+                .then(response => {
+                    const actors = response.data.data;
+                    const suggestionNames = [];
+                    console.log(actors)
+                    // 读取数据，获取每个演员的actorName
+                    for (let i = 0; i < actors.length; i++) {
+                        suggestionNames.push({
+                            label: actors[i].personId,
+                            value: actors[i].castName,
+                        });
+                    }
+                    this.suggestionsActor = suggestionNames;
+                    callback(this.suggestionsActor);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
+        handleSelectActor(item) {
+            this.inputActor = '';
+            // 不能重复添加
+            if (!this.selectedActor.includes(item.value)) {
+                this.selectedActor.push(item.value);
+                // 添加id到castIdList中
+                this.movieData.castIdList.push(item.label);
+                console.log(this.movieData.castIdList)
+            }
+        },
+        handleTagCloseActor(actorsName) {
+            const index = this.selectedActor.indexOf(actorsName);
+            if (index !== -1) {
+                this.selectedActor.splice(index, 1);
+            }
+        },
+        actorName() {
+            if (this.inputActorName != "") {
+                this.movieData.newCastNameList.push(this.inputActorName);
+                this.selectedActorName.push(this.inputActorName);
+                this.inputActorName = "";
+            }
+        },
+        handleTagCloseActorName(actorsName) {
+            const index = this.selectedActorName.indexOf(actorsName);
+            if (index !== -1) {
+                this.selectedActorName.splice(index, 1);
+            }
+        },
+
+        //模糊查询电影名
+        transshipmentdepotremoteMethod(query) {
+            if (query) {
+                this.loading = true
+                this.movieOptions = this.movieAll
+                getmovie(query, 10).then(res => {
+                    this.loading = false
+                    if (res.code == 1) {
+                        console.log(res);
+                        this.movieOptions = res.data;
+                        return (this.movieOptions)
+                    } else if (res.code == 0) {
+                        this.movieOptions = [];
+                    }
+                }).catch(err => {
+                    console.log(err.response)
+                })
+            } else {
+                this.movieOptions = []
+
+            }
+            // if (query !== '') {
+            //     this.loading = true;
+            //     setTimeout(() => {
+            //         this.loading = false;
+            //         this.countryOptions = this.countryAll.filter(item => {
+            //             return item.countryName.indexOf(query) > -1;
+            //         });
+            //     }, 200);
+            // } else {
+            //     this.countryOptions = this.countryAll;
+            // }
+        },
+
+        //模糊查询类目名
+        genreMethod(query) {
+            if (query) {
+                this.loadinggenre = true
+                this.genreOptions = this.genreAll
+                getgenre(query, 10).then(res => {
+                    this.loadinggenre = false
+                    if (res.code == 1) {
+                        console.log(res);
+                        this.genreOptions = res.data;
+                        return (this.genreOptions)
+                    } else if (res.code == 0) {
+                        this.genreOptions = [];
+                    }
+                }).catch(err => {
+                    console.log(err.response)
+                })
+            } else {
+                this.genreOptions = []
+            }
+        },
+
+        //添加电影按钮
+        addMovie() {
+            console.log(this.movieData);
+            if (this.movieData.movie.budget == "" || this.movieData.movie.homepage == "" || this.movieData.movie.originalTitle == ""
+                || this.movieData.movie.overview == "" || this.movieData.movie.popularity == "" || this.movieData.movie.releaseDate == "" || this.movieData.movie.revenue == "" || this.movieData.movie.runtime == ""
+                || this.movieData.movie.tagline == "" || this.movieData.movie.title == "" || this.movieData.movie.voteAverage == "" || this.movieData.movie.voteCount == "") {
+                this.$message({
+                    showClose: true,
+                    message: '添加的电影有未填写或选择的信息',
+                    type: 'error'
+                })
+
+            } else {
+                movieadd(this.movieData).then(res => {
+                    console.log(res)
+                    if (res.code == 1) {
+                        this.$message({
+                            showClose: true,
+                            message: '添加电影成功',
+                            type: 'success'
+                        })
+                    } else {
+                        this.$message({
+                            showClose: true,
+                            message: '添加电影失败',
+                            type: 'error'
+                        })
+                    }
+                }).catch(err => {
+                    console.log(err.response)
+                })
+            }
+        },
+
+        //添加类目按钮
+        addGenres() {
+            if (this.genre.genreName == "") {
+                this.$message({
+                    showClose: true,
+                    message: '请输入要添加类目名',
+                    type: 'error'
+                })
+            } else {
+                genreadd(this.genre).then(res => {
+                    console.log(res)
+                    if (res.code == 1) {
+                        this.$message({
+                            showClose: true,
+                            message: '添加类目成功',
+                            type: 'success'
+                        })
+                    } else if (res.code == 0) {
+                        this.$message({
+                            showClose: true,
+                            message: '类目已存在，添加失败',
+                            type: 'error'
+                        })
+                    } else {
+                        this.$message({
+                            showClose: true,
+                            message: '添加类目失败',
+                            type: 'error'
+                        })
+                    }
+                }).catch(err => {
+                    console.log(err.response)
+                })
+            }
+        },
+
+        //添加电影到类目中按钮
+        addMovieGenres() {
+            if (this.movieaddgenreData.movieId == null) {
+                this.$message({
+                    showClose: true,
+                    message: '请输入要添加的电影名',
+                    type: 'error'
+                })
+            } else if (this.movieaddgenreData.genreId == null) {
+                this.$message({
+                    showClose: true,
+                    message: '请输入要添加的类目名',
+                    type: 'error'
+                })
+            } else {
+                movieaddgenre(this.movieaddgenreData).then(res => {
+                    console.log(res)
+                    if (res.code == 1) {
+                        this.$message({
+                            showClose: true,
+                            message: '添加电影到类目中成功',
+                            type: 'success'
+                        })
+                        this.movieaddgenreData.genreId = null;
+                        this.movieaddgenreData.movieId = null;
+                        this.movieOptions = this.movieAll;
+                        this.genreOptions = this.genreAll;
+                    } else if (res.code == 0) {
+                        this.$message({
+                            showClose: true,
+                            message: res.msg,
+                            type: 'error'
+                        })
+                    }
+                    else {
+                        this.$message({
+                            showClose: true,
+                            message: '添加电影到类目中失败',
+                            type: 'error'
+                        })
+                    }
+                }).catch(err => {
+                    console.log(err.response)
+                })
+            }
+        },
+    },
+    // watch: {
+    //     SelectData: function (newVal) {
+    //         this.countryOptions = newVal
+
+    //     }
+    // },
 }
 </script>
 
@@ -253,7 +754,7 @@ export default {
 .movie_div {
     margin-left: 150px;
     width: 1100px;
-    height: 600px;
+    height: 760px;
     margin-top: 10px;
     border-radius: 24px;
     background: #8ac7a4;

@@ -16,7 +16,7 @@ export default defineConfig({
     port:5174,
     proxy: {
       '/api': {
-        target: 'http://localhost:8080',
+        target: 'http://43.143.247.127:8088',
         // secure: false, //如果是https接口，如要配置此参数
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
@@ -24,4 +24,5 @@ export default defineConfig({
     },
   },
 })
+
 
