@@ -565,7 +565,7 @@ export default {
                 this.movieData[i].overview = resData[i].overview;
                 this.movieData[i].ratingAverage = resData[i].ratingAverage;
                 this.movieData[i].time = resData[i].releaseDate;
-                this.movieData[i].posterPath = "https://image.tmdb.org/t/p/original" + resData[i].posterPath;
+                this.movieData[i].posterPath = "https://cos-lqyrmk-1312783534.cos.ap-beijing.myqcloud.com/resources/emovie/movie_poster/1/" + resData[i].imdbId + ".jpg";
 
                 for (let j = 0; j < resData[i].movieCountryList.length; j++) {
                   this.movieData[i].country.push({

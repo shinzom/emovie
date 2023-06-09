@@ -91,6 +91,10 @@ export default {
                             message: '用户登录成功',
                             type: 'success'
                         })
+                        console.log(res)
+                        const token = res.data.userId
+                        window.localStorage.clear('token');
+                        window.localStorage.setItem('token', token);
                     } else if (res.code == 0){
                         this.$message({
                             showClose: true,

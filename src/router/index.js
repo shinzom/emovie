@@ -6,9 +6,11 @@ import Home from '../views/Home.vue'
 import Search from '../views/Search.vue'
 import Add from '../views/Add.vue'
 import Homepage from '../views/Homepage.vue'
+import Recommend from '../views/Recommend.vue'
 import HighRating from '../views/HighRating.vue'
 import Hot from '../views/Hot.vue'
 import Moviedetails from '../views/Moviedetails.vue'
+import Userpage from '../views/Userpage.vue'
 
 const routes = [
   {
@@ -36,12 +38,17 @@ const routes = [
         component: Homepage,
       },
       {
-        path: "/highrating",
+        path: "/recommend/:page",
+        name: "/recommend",
+        component: Recommend,
+      },
+      {
+        path: "/highrating/:page",
         name: "/highrating",
         component: HighRating,
       },
       {
-        path: "/hot",
+        path: "/hot/:page",
         name: "/hot",
         component: Hot,
       },
@@ -49,6 +56,11 @@ const routes = [
         path: "/moviedetails/:id",
         name: "/moviedetails",
         component: Moviedetails,
+      },
+      {
+        path: "/userpage",
+        name: "/userpage",
+        component: Userpage,
       },
     ]
   },

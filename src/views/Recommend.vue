@@ -5,7 +5,7 @@
                 <div class="movieDesIn">
                     <el-image style="height: 200px;width:150px;" :src=movieData[0].posterPath :fit="'scale-down'" />
                     <div style="width: 605px;margin-left: 10px;">
-                        <el-descriptions :title=movieData[0].title :column="4">
+                        <el-descriptions :title=movieData[0].title :column="3">
                             <el-descriptions-item label="发行时间:">
                                 <el-tag size="small" style="background-color: rgb(226, 207, 254);">{{ movieData[0].time }}
                                 </el-tag>
@@ -18,10 +18,6 @@
                             <el-descriptions-item label="语言:">
                                 <el-tag size="small" style="background-color: rgb(184, 230, 211);">{{ movieData[0].language
                                 }}
-                                </el-tag>
-                            </el-descriptions-item>
-                            <el-descriptions-item label="热度:">
-                                <el-tag size="small" style="background-color: rgb(220, 188, 168);">{{ movieData[0].popularity }}
                                 </el-tag>
                             </el-descriptions-item>
                         </el-descriptions>
@@ -52,7 +48,7 @@
                 <div class="movieDesIn">
                     <el-image style="height: 200px;width: 150px;" :src=movieData[1].posterPath :fit="'scale-down'" />
                     <div style="width: 605px;margin-left: 10px;">
-                        <el-descriptions :title=movieData[1].title :column="4">
+                        <el-descriptions :title=movieData[1].title :column="3">
                             <el-descriptions-item label="发行时间:">
                                 <el-tag size="small" style="background-color: rgb(226, 207, 254);">{{ movieData[1].time }}
                                 </el-tag>
@@ -65,10 +61,6 @@
                             <el-descriptions-item label="语言:">
                                 <el-tag size="small" style="background-color: rgb(184, 230, 211);">{{ movieData[1].language
                                 }}
-                                </el-tag>
-                            </el-descriptions-item>
-                            <el-descriptions-item label="热度:">
-                                <el-tag size="small" style="background-color: rgb(220, 188, 168);">{{ movieData[1].popularity }}
                                 </el-tag>
                             </el-descriptions-item>
                         </el-descriptions>
@@ -101,7 +93,7 @@
                 <div class="movieDesIn">
                     <el-image style="height: 200px;width:150px;" :src=movieData[2].posterPath :fit="'scale-down'" />
                     <div style="width: 605px;margin-left: 10px;">
-                        <el-descriptions :title=movieData[2].title :column="4">
+                        <el-descriptions :title=movieData[2].title :column="3">
                             <el-descriptions-item label="发行时间:">
                                 <el-tag size="small" style="background-color: rgb(226, 207, 254);">{{ movieData[2].time }}
                                 </el-tag>
@@ -114,10 +106,6 @@
                             <el-descriptions-item label="语言:">
                                 <el-tag size="small" style="background-color: rgb(184, 230, 211);">{{ movieData[2].language
                                 }}
-                                </el-tag>
-                            </el-descriptions-item>
-                            <el-descriptions-item label="热度:">
-                                <el-tag size="small" style="background-color: rgb(220, 188, 168);">{{ movieData[2].popularity }}
                                 </el-tag>
                             </el-descriptions-item>
                         </el-descriptions>
@@ -148,7 +136,7 @@
                 <div class="movieDesIn">
                     <el-image style="height: 200px;width: 150px;" :src=movieData[3].posterPath :fit="'scale-down'" />
                     <div style="width: 605px;margin-left: 10px;">
-                        <el-descriptions :title=movieData[3].title :column="4">
+                        <el-descriptions :title=movieData[3].title :column="3">
                             <el-descriptions-item label="发行时间:">
                                 <el-tag size="small" style="background-color: rgb(226, 207, 254);">{{ movieData[3].time }}
                                 </el-tag>
@@ -161,10 +149,6 @@
                             <el-descriptions-item label="语言:">
                                 <el-tag size="small" style="background-color: rgb(184, 230, 211);">{{ movieData[3].language
                                 }}
-                                </el-tag>
-                            </el-descriptions-item>
-                            <el-descriptions-item label="热度:">
-                                <el-tag size="small" style="background-color: rgb(220, 188, 168);">{{ movieData[3].popularity }}
                                 </el-tag>
                             </el-descriptions-item>
                         </el-descriptions>
@@ -197,7 +181,7 @@
                 <div class="movieDesIn">
                     <el-image style="height: 200px;width:150px;" :src=movieData[4].posterPath :fit="'scale-down'" />
                     <div style="width: 605px;margin-left: 10px;">
-                        <el-descriptions :title=movieData[4].title :column="4">
+                        <el-descriptions :title=movieData[4].title :column="3">
                             <el-descriptions-item label="发行时间:">
                                 <el-tag size="small" style="background-color: rgb(226, 207, 254);">{{ movieData[4].time }}
                                 </el-tag>
@@ -210,10 +194,6 @@
                             <el-descriptions-item label="语言:">
                                 <el-tag size="small" style="background-color: rgb(184, 230, 211);">{{ movieData[4].language
                                 }}
-                                </el-tag>
-                            </el-descriptions-item>
-                            <el-descriptions-item label="热度:">
-                                <el-tag size="small" style="background-color: rgb(220, 188, 168);">{{ movieData[4].popularity }}
                                 </el-tag>
                             </el-descriptions-item>
                         </el-descriptions>
@@ -244,7 +224,7 @@
                 <div class="movieDesIn">
                     <el-image style="height: 200px;width: 150px;" :src=movieData[5].posterPath :fit="'scale-down'" />
                     <div style="width: 605px;margin-left: 10px;">
-                        <el-descriptions :title=movieData[5].title :column="4">
+                        <el-descriptions :title=movieData[5].title :column="3">
                             <el-descriptions-item label="发行时间:">
                                 <el-tag size="small" style="background-color: rgb(226, 207, 254);">{{ movieData[5].time }}
                                 </el-tag>
@@ -257,10 +237,6 @@
                             <el-descriptions-item label="语言:">
                                 <el-tag size="small" style="background-color: rgb(184, 230, 211);">{{ movieData[5].language
                                 }}
-                                </el-tag>
-                            </el-descriptions-item>
-                            <el-descriptions-item label="热度:">
-                                <el-tag size="small" style="background-color: rgb(220, 188, 168);">{{ movieData[5].popularity }}
                                 </el-tag>
                             </el-descriptions-item>
                         </el-descriptions>
@@ -309,7 +285,6 @@ export default {
                     overview: "",
                     ratingAverage: "",
                     posterPath: "",
-                    popularity:"",
                 },
                 {
                     movieId: null,
@@ -321,7 +296,6 @@ export default {
                     overview: "",
                     ratingAverage: "",
                     posterPath: "",
-                    popularity:"",
                 },
                 {
                     movieId: null,
@@ -333,7 +307,6 @@ export default {
                     overview: "",
                     ratingAverage: "",
                     posterPath: "",
-                    popularity:"",
                 },
                 {
                     movieId: null,
@@ -345,7 +318,6 @@ export default {
                     overview: "",
                     ratingAverage: "",
                     posterPath: "",
-                    popularity:"",
                 },
                 {
                     movieId: null,
@@ -357,7 +329,6 @@ export default {
                     overview: "",
                     ratingAverage: "",
                     posterPath: "",
-                    popularity:"",
                 },
                 {
                     movieId: null,
@@ -369,7 +340,6 @@ export default {
                     overview: "",
                     ratingAverage: "",
                     posterPath: "",
-                    popularity:"",
                 },
             ],
             showMovie: [
@@ -381,7 +351,7 @@ export default {
     },
     created() {
         this.curPage = this.$route.params.page;
-        hotOrRatingMovie(this.curPage, 6, 1).then((res) => {
+        hotOrRatingMovie(this.curPage, 6, 3).then((res) => {
             console.log(res)
             if (res.code == 1) {
                 this.totalPage = res.data.pages;
@@ -408,10 +378,7 @@ export default {
                     this.movieData[i].overview = resData[i].overview;
                     this.movieData[i].ratingAverage = resData[i].ratingAverage;
                     this.movieData[i].time = resData[i].releaseDate;
-                    // this.movieData[i].posterPath = "https://image.tmdb.org/t/p/original" + resData[i].posterPath;
                     this.movieData[i].posterPath = "https://cos-lqyrmk-1312783534.cos.ap-beijing.myqcloud.com/resources/emovie/movie_poster/1/" + resData[i].imdbId + ".jpg";
-                    //this.movieData[i].posterPath = "https://cos-lqyrmk-1312783534.cos.ap-beijing.myqcloud.com/emovie_poster/tt0006177.jpg";
-                    this.movieData[i].popularity = resData[i].popularity;
 
                     for (let j = 0; j < resData[i].movieCountryList.length; j++) {
                         this.movieData[i].country.push({
@@ -445,8 +412,8 @@ export default {
             console.log(val)
             this.showMovie = [false, false, false, false, false, false];
             this.curPage = val;
-            this.$router.push('/hot/'+this.curPage)
-            hotOrRatingMovie(this.curPage, 6, 1).then((res) => {
+            this.$router.push('/recommend/'+this.curPage)
+            hotOrRatingMovie(this.curPage, 6, 3).then((res) => {
                 console.log(res)
                 if (res.code == 1) {
                     this.totalPage = res.data.pages;
@@ -474,7 +441,6 @@ export default {
                         this.movieData[i].ratingAverage = resData[i].ratingAverage;
                         this.movieData[i].time = resData[i].releaseDate;
                         this.movieData[i].posterPath = "https://cos-lqyrmk-1312783534.cos.ap-beijing.myqcloud.com/resources/emovie/movie_poster/1/" + resData[i].imdbId + ".jpg";
-                        this.movieData[i].popularity = resData[i].popularity;
 
                         for (let j = 0; j < resData[i].movieCountryList.length; j++) {
                             this.movieData[i].country.push({

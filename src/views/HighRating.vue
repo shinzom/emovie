@@ -350,6 +350,7 @@ export default {
         }
     },
     created() {
+        this.curPage = this.$route.params.page;
         hotOrRatingMovie(this.curPage, 6, 2).then((res) => {
             console.log(res)
             if (res.code == 1) {
@@ -411,6 +412,7 @@ export default {
             console.log(val)
             this.showMovie = [false, false, false, false, false, false];
             this.curPage = val;
+            this.$router.push('/highrating/'+this.curPage)
             hotOrRatingMovie(this.curPage, 6, 2).then((res) => {
                 console.log(res)
                 if (res.code == 1) {

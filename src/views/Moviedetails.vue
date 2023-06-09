@@ -1,5 +1,6 @@
 <template>
-  <el-card class="movie-details" style="box-shadow:  5px 5px 56px #bbddc1,-5px -5px 56px #e1ffe7;background-color: #f4fcf6;border-radius: 50px;">
+  <el-card class="movie-details"
+    style="box-shadow:  5px 5px 56px #bbddc1,-5px -5px 56px #e1ffe7;background-color: #f0f1f0;border-radius: 50px;">
     <div class="left-section">
       <el-image class="movie-poster" :src=movieData.posterPath fit="fill"></el-image>
     </div>
@@ -24,7 +25,7 @@
         <div class="movie-info-item">
           <span class="movie-info-label">我的评分：</span>
           <el-rate v-model="movieData.userRating" @change="updateRating" :allow-half="true" size="300"></el-rate>
-          <span class="movie-info-value">{{ (movieData.userRating * 2).toFixed(1) }}</span>
+          <span class="movie-info-value">{{ (movieData.userRating).toFixed(1) }}</span>
         </div>
         <div class="movie-info-item">
           <span class="movie-info-label">热度：</span>
@@ -52,48 +53,44 @@
     </div>
   </el-card>
 
-  <div style="display:flex;flex-direction: row;align-items: center;justify-content:space-between;">
-    <el-card style="width:30%;margin-left: 50px;border-radius: 78px;background: #a5dab3;">
+  <div style="display:flex;flex-direction: row;justify-content:space-between;">
+    <el-card style="width:30%;margin-left: 50px;border-radius: 78px;background: #a5dab3;height: 500px;">
       <span class="movie_person">相关工作人员：</span>
-      <div v-for="item in movieData.director"
-        style="display:flex;flex-direction: column;align-items: center;margin-top: 10px;">
-        <span style="font-size: 20px;">{{ item.name }}</span>
-        <span style="font-size: 15px;">{{ item.job }}</span>
-      </div>
-      <!-- </div> -->
+      <el-scrollbar height="400px" style="margin-top: 10px;">
+        <div v-for="item in movieData.director"
+          style="display:flex;flex-direction: column;align-items: center;margin-top: 10px;">
+          <span style="font-size: 20px;">{{ item.name }}</span>
+          <span style="font-size: 15px;">{{ item.job }}</span>
+        </div>
+      </el-scrollbar>
     </el-card>
 
-    <el-card style="width:55%;margin-right: 50px;border-radius: 78px;background: #a5dab3;">
+    <el-card style="width:55%;margin-right: 50px;border-radius: 78px;background: #a5dab3;height: 500px;">
       <span class="movie_person">主演：</span>
-      <div v-for="item in movieData.stars" style="margin-right: 40px;margin-left: 120px;">
-        <span style="display: inline-block;width: 220px;font-size: 20px;">{{ item.name }}</span>
-        <span style="display: inline-block;width: 90px;font-size: 15px;margin-left: 10px;margin-right: 10px;">PLAYS</span>
-        <span style="display: inline-block;font-size: 20px;">{{ item.character }}</span>
-      </div>
+      <el-scrollbar height="400px" style="margin-top: 10px;">
+        <div v-for="item in movieData.stars" style="margin-right: 40px;margin-left: 120px;">
+          <span style="display: inline-block;width: 220px;font-size: 20px;">{{ item.name }}</span>
+          <span
+            style="display: inline-block;width: 90px;font-size: 15px;margin-left: 10px;margin-right: 10px;">PLAYS</span>
+          <span style="display: inline-block;font-size: 20px;">{{ item.character }}</span>
+        </div>
+      </el-scrollbar>
+
     </el-card>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
 import { getMovieData } from "../utils/api";
+import { searchUserMovieRating } from "../utils/api";
+import { addOrModifyRating } from "../utils/api";
+import { callRecommendAlg } from "../utils/api";
 export default {
   data() {
     return {
-      // movie: {
-      //   movieId: 2,
-      //   title: '太阳照常升起',
-      //   genre: '剧情 / 奇幻',
-      //   language: '国语',
-      //   imgSrc: 'https://pic2.zhimg.com/1c84be4c5d469f94936e7a294670fb59_r.jpg',
-      //   releaseDate: '2007年9月14日',
-      //   director: '姜文',
-      //   stars: '房祖名, 姜文, 周韵, 陈冲, 崔健',
-      //   ratingAverage: 8.8,
-      //   numberofRatings: 666,
-      //   plot: '电影改編自作家葉彌的短篇小說《天鵝絨》。电影讲述了四段分别发生于1958年至1976年期间，地点在中国南部、东部、西部，看似分散实又相连的人物故事。',
-      //   movieLink: 'https://vidhub.cc/voddetail/74758.html',
-      // },
       movieData: {
+        movieId: 0,
         posterPath: "",
         title: "",
         releaseDate: "",
@@ -109,12 +106,24 @@ export default {
         stars: [],
         language: "",
       },
+      token: 0,
+      ratingData: {
+        userId: 0,
+        movieId: 0,
+        rating: null,
+      },
+      recommendData: {
+        user_id: 0,
+        recommendNum: 24
+      }
     }
   },
   created() {
+    //电影详细信息
     getMovieData(this.$route.params.id).then((res) => {
       console.log(res)
       if (res.code == 1) {
+        this.movieData.movieId = res.data.movieId;
         this.movieData.overview = res.data.overview;
         this.movieData.popularity = res.data.popularity;
         this.movieData.posterPath = "https://cos-lqyrmk-1312783534.cos.ap-beijing.myqcloud.com/resources/emovie/movie_poster/1/" + res.data.imdbId + ".jpg";
@@ -164,6 +173,24 @@ export default {
             job: res.data.crewList[i].job
           });
         }
+
+
+        //判断用户是否登录
+        this.token = window.localStorage.getItem('token');
+        //若用户登录，查询是否对显示的电影评分，若评分，则显示出来
+        if (this.token != 0) {
+          console.log(this.movieData.movieId)
+          searchUserMovieRating(this.token, this.movieData.movieId).then((res) => {
+            console.log(res)
+            if (res.code == 1) {
+              this.movieData.userRating = res.data.rating;
+            } else {
+              this.movieData.userRating = 0;
+            }
+          }).catch(err => {
+            console.log(err.response)
+          });
+        }
       } else {
         this.$message({
           showClose: true,
@@ -174,12 +201,52 @@ export default {
     }).catch(err => {
       console.log(err.response)
     })
+
   },
   methods: {
+    //更新评分
     updateRating() {
-      // if (this.movieData.userRating) {
-      //   this.movieData.ratingAverage = ((this.movieData.ratingAverage * this.movie.numberofRatings) + this.movie.userRating * 2) / (++this.movie.numberofRatings);
-      // }
+      //判断用户是否登录
+      this.token = window.localStorage.getItem('token');
+      if (this.token == 0) {
+        this.$message({
+          showClose: true,
+          message: '用户未登录，请先登录',
+          type: 'error'
+        })
+        this.$router.push('/login');
+      } else {
+        this.ratingData.movieId = this.movieData.movieId;
+        this.ratingData.userId = this.token;
+        this.ratingData.rating = this.movieData.userRating;
+        addOrModifyRating(this.ratingData).then((res) => {
+          console.log(res)
+          if (res.code == 1) {
+            this.$message({
+              showClose: true,
+              message: '添加或修改评分成功',
+              type: 'success'
+            })
+            //调用推荐算法
+            this.recommendData.user_id = this.token;
+            callRecommendAlg(this.recommendData).then((res) => {
+              console.log(res)
+            }).catch(err => {
+              console.log(err.response)
+            });
+          } else {
+            this.$message({
+              showClose: true,
+              message: '添加或修改评分失败',
+              type: 'error'
+            })
+          }
+        }).catch(err => {
+          console.log(err.response)
+        });
+      }
+
+
     }
   }
 }
